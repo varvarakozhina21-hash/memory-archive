@@ -54,6 +54,10 @@ color:#00ff88;
 font-family:monospace;
 }
 
+button{
+cursor:pointer;
+}
+
 #terminal{
 margin-top:20px;
 white-space:pre-wrap;
@@ -97,6 +101,7 @@ sector_19:false
 
 function write(text){
 terminal.innerHTML+=text+"\n";
+terminal.scrollTop=terminal.scrollHeight;
 }
 
 function getProgress(){
@@ -113,12 +118,10 @@ return Math.floor(found/3*100);
 
 function run(){
 
-const v=document.getElementById("cmd")
-.value
-.trim()
-.toLowerCase();
+const input=document.getElementById("cmd");
+const v=input.value.trim().toLowerCase();
 
-document.getElementById("cmd").value="";
+input.value="";
 
 write("> "+v);
 
@@ -161,8 +164,8 @@ if(v==="sector_07"){
 holesFound.sector_07=true;
 
 write("Scanning sector...");
-write("WARNING:");
-write("Unexpected memory pattern detected");
+write("Аномалия обнаружена");
+write("Восстановлен скрытый фрагмент памяти");
 
 }
 
@@ -171,8 +174,8 @@ else if(v==="sector_13"){
 holesFound.sector_13=true;
 
 write("Scanning sector...");
-write("WARNING:");
-write("Corrupted node signature found");
+write("Аномалия обнаружена");
+write("Обнаружен повреждённый след");
 
 }
 
@@ -181,8 +184,8 @@ else if(v==="sector_19"){
 holesFound.sector_19=true;
 
 write("Scanning sector...");
-write("WARNING:");
-write("Hidden fragment recovered");
+write("Аномалия обнаружена");
+write("Найден последний скрытый фрагмент");
 
 }
 
@@ -211,13 +214,15 @@ return;
 
 write("CORE MEMORY UNLOCKED");
 write("");
-write("Final analysis complete");
+write("ПРОВЕРКА ЗАВЕРШЕНА...");
+write("АНАЛИЗ ОБЪЕКТА...");
 write("");
-write("Classification: NON-STANDARD USER");
-write("Priority level: HIGH");
+write("Система: классификация завершена");
+write("Статус: объект не является стандартным пользователем");
+write("Уровень значимости: высокий");
 write("");
-write("Happy Birthday ❤️");
-write("System permanently saved target");
+write("С днём рождения ❤️");
+write("Система зафиксировала тебя в памяти.");
 
 }
 
@@ -231,8 +236,7 @@ write("UNKNOWN COMMAND");
 
 setTimeout(()=>{
 
-status.innerText=
-"> CORE NODE ONLINE";
+status.innerText="> CORE NODE ONLINE";
 
 },1200);
 
