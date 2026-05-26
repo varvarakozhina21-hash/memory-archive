@@ -108,8 +108,10 @@ sector_19:false
 };
 
 function write(text){
-terminal.innerHTML+=text+"\n";
-terminal.scrollTop=terminal.scrollHeight;
+
+terminal.innerHTML += "> " + text + "\n";
+terminal.scrollTop = terminal.scrollHeight;
+
 }
 
 function getProgress(){
