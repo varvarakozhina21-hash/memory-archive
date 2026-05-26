@@ -110,14 +110,37 @@ sector_13:false,
 sector_19:false
 };
 
+let queue = [];
+let isWriting = false;
+
 function write(text){
+queue.push(text);
+if(!isWriting){
+processQueue();
+}
+}
+
+function processQueue(){
+
+if(queue.length === 0){
+isWriting = false;
+return;
+}
+
+isWriting = true;
+
+let text = queue.shift();
 
 let lines = text.split("\n");
 let lineIndex = 0;
 
 function printLine(){
 
-if(lineIndex >= lines.length) return;
+if(lineIndex >= lines.length){
+isWriting = false;
+processQueue();
+return;
+}
 
 let line = document.createElement("div");
 terminal.appendChild(line);
