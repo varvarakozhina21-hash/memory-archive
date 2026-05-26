@@ -117,18 +117,42 @@ terminal.appendChild(line);
 
 let i=0;
 
-function type(){
-if(i < text.length){
-line.innerHTML += text.charAt(i);
+function write(text){
+
+let lines = text.split("\n");
+let lineIndex = 0;
+
+function printLine(){
+
+if(lineIndex >= lines.length) return;
+
+let line = document.createElement("div");
+terminal.appendChild(line);
+
+let i = 0;
+
+function typeChar(){
+
+if(i < lines[lineIndex].length){
+line.innerHTML += lines[lineIndex].charAt(i);
 i++;
 terminal.scrollTop = terminal.scrollHeight;
-setTimeout(type, 20);
+setTimeout(typeChar, 15);
+
 }else{
-terminal.scrollTop = terminal.scrollHeight;
-}
+
+lineIndex++;
+setTimeout(printLine, 120);
+
 }
 
-type();
+}
+
+typeChar();
+
+}
+
+printLine();
 
 }
 
