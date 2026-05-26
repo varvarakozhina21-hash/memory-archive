@@ -152,134 +152,55 @@ hidden fragment unlocked
 </div>
 
 <script>
-let holesFound = {
-  sector_07: false,
-  else if(v === "sector_07"){
-holesFound.sector_07 = true;
-write("SECTOR 07 найден...");
-write("фрагмент памяти восстановлен");
-}
-  sector_13: false,
-    else if(v === "sector_13"){
-holesFound.sector_13 = true;
-write("SECTOR 13 найден...");
-write("что-то личное всплыло...");
-}
-  sector_19: false
-  else if(v === "sector_19"){
-holesFound.sector_19 = true;
-write("SECTOR 19 найден...");
-write("последний фрагмент восстановлен");
-}
-};
 const terminal = document.getElementById("terminal");
 const status = document.getElementById("status");
 
-function write(text){
-terminal.innerHTML += text + "\n";
+function write(t){
+terminal.innerHTML += t + "\n";
 }
 
-function run(){function run(){
+function run(){
 
 const input = document.getElementById("cmd");
-if(!input) return;
-
 const v = input.value.trim().toLowerCase();
 input.value = "";
 
-if(!window.write){
-alert("write() не найден — проблема в script");
-return;
-}
-
 write("> " + v);
 
-// тестовая проверка
-if(v === "test"){
-write("SYSTEM OK");
-}
-
-else {
-write("UNKNOWN COMMAND");
-}
-
-}
+if(v === "help"){
+write("commands: help / logs / scan / exploit / status / core");
 }
 
 else if(v === "logs"){
-document.getElementById("logs").style.display = "block";
-write("loading memory fragments...");
-write("WARNING: these are not system logs. these are memories.");
+write("loading logs...");
+write("log_01 ... log_19");
 }
 
 else if(v === "scan"){
-document.getElementById("scanbox").style.display = "block";
-write("scanning corrupted memory sectors...");
-write("sector_07 contains emotional rupture");
-write("sector_13 contains erased identity fragment");
-write("sector_19 contains final locked memory");
+write("scanning system...");
+write("3 anomalies detected");
 }
 
 else if(v === "exploit"){
-document.getElementById("exploitbox").style.display = "block";
 write("breach initiated...");
-write("attempting memory reconstruction...");
-write("rebuilding identity structure...");
-write("SUCCESS: memory partially restored");
-write("a message is waiting in core layer...");
+write("memory fragments found");
 }
 
 else if(v === "status"){
-write("SYSTEM STABLE: false");
-write("MEMORY INTEGRITY: 73%");
-write("ANOMALIES DETECTED: emotional");
-write("NOTE: system behaves like a human memory");
-}
-
-else if(v === "memory"){
-write("ACCESSING CORE MEMORY...");
-write("...you were never just a system.");
-write("...you were someone trying to be remembered.");
-}
-
-else if(v === "sector_07"){
-write("ACCESSING SECTOR_07...");
-write("memory fragment unstable...");
-write("you tried to ignore this moment");
-write("but it still exists in system cache");
-}
-
-else if(v === "sector_13"){
-write("ACCESSING SECTOR_13...");
-write("deleted memory detected");
-write("this fragment was marked as 'not important'");
-write("but system remembers everything");
-}
-
-else if(v === "sector_19"){
-write("ACCESSING SECTOR_19...");
-write("FINAL LOCKED MEMORY FOUND");
-write("this is not an error");
-write("this is the moment everything was meant for you");
+write("SYSTEM OK");
 }
 
 else if(v === "core"){
-
-if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
-write("CORE LOCKED...");
-write("нужно восстановить все 3 фрагмента памяти");
-return;
-}
-
 write("CORE MEMORY UNLOCKED...");
-write("");
 write("С днём рождения ❤️");
-write("Система собрала всю память.");
-write("Теперь она принадлежит только тебе.");
-}
+write("Система зафиксировала тебя как важную память.");
 }
 
-else {
+else if(v === "test"){
+write("SYSTEM OK");
+}
+
+else{
 write("UNKNOWN COMMAND");
 }
 
