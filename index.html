@@ -179,15 +179,31 @@ function write(text){
 terminal.innerHTML += text + "\n";
 }
 
-function run(){
+function run(){function run(){
 
-const v = document.getElementById("cmd").value.trim().toLowerCase();
-document.getElementById("cmd").value = "";
+const input = document.getElementById("cmd");
+if(!input) return;
+
+const v = input.value.trim().toLowerCase();
+input.value = "";
+
+if(!window.write){
+alert("write() не найден — проблема в script");
+return;
+}
 
 write("> " + v);
 
-if(v === "help"){
-write("commands: help / logs / scan / exploit / status / memory / sector_07 / sector_13 / sector_19 / core");
+// тестовая проверка
+if(v === "test"){
+write("SYSTEM OK");
+}
+
+else {
+write("UNKNOWN COMMAND");
+}
+
+}
 }
 
 else if(v === "logs"){
