@@ -208,7 +208,23 @@ write("Система зафиксировала тебя как важную п
 else if(v === "test"){
 write("SYSTEM OK");
 }
+else if(v === "sector_07"){
+holesFound.sector_07 = true;
+write("SECTOR 07 найден...");
+write("фрагмент памяти восстановлен");
+}
 
+  else if(v === "sector_13"){
+holesFound.sector_13 = true;
+write("SECTOR 13 найден...");
+write("что-то личное всплыло...");
+}
+  else if(v === "sector_19"){
+holesFound.sector_19 = true;
+write("SECTOR 19 найден...");
+write("последний фрагмент восстановлен");
+}
+    
 else{
 write("UNKNOWN COMMAND");
 }
