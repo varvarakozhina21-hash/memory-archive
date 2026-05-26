@@ -112,8 +112,23 @@ sector_19:false
 
 function write(text){
 
-terminal.innerHTML += "> " + text + "\n";
+let line=document.createElement("div");
+terminal.appendChild(line);
+
+let i=0;
+
+function type(){
+if(i < text.length){
+line.innerHTML += text.charAt(i);
+i++;
 terminal.scrollTop = terminal.scrollHeight;
+setTimeout(type, 20);
+}else{
+terminal.scrollTop = terminal.scrollHeight;
+}
+}
+
+type();
 
 }
 
@@ -136,7 +151,7 @@ const v=input.value.trim().toLowerCase();
 
 input.value="";
 
-write("> "+v);
+write("INPUT: "+v);
 
 if(v==="help"){
 
