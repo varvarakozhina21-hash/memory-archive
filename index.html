@@ -9,9 +9,26 @@
 body{
 margin:0;
 background: radial-gradient(circle at top, #121a26, #0b0f14 60%, #070a0f);
+background-size: 200% 200%;
+animation: bgBreath 18s ease-in-out infinite;
 color:#cbd5e1;
 font-family:monospace;
 overflow:hidden;
+}
+
+@keyframes bgBreath{
+0%{
+background-position: 0% 30%;
+filter: brightness(1);
+}
+50%{
+background-position: 100% 70%;
+filter: brightness(1.08);
+}
+100%{
+background-position: 0% 30%;
+filter: brightness(1);
+}
 }
 
 .scanline{
