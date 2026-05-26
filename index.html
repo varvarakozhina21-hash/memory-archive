@@ -157,14 +157,88 @@ const terminal = document.getElementById("terminal");
 const status = document.getElementById("status");
 
 function write(text){
-function run(){
+function run(){function run(){
 const v = document.getElementById("cmd").value.trim().toLowerCase();
 document.getElementById("cmd").value = "";
 
 write("> " + v);
 
 if(v === "help"){
-write("commands: help / logs / scan / exploit / status / memory");
+write("commands: help / logs / scan / exploit / status / memory / sector_07 / sector_13 / sector_19 / core");
+}
+
+else if(v === "logs"){
+document.getElementById("logs").style.display = "block";
+write("loading memory fragments...");
+write("WARNING: these are not system logs. these are memories.");
+}
+
+else if(v === "scan"){
+document.getElementById("scanbox").style.display = "block";
+write("scanning corrupted memory sectors...");
+write("sector_07 contains emotional rupture");
+write("sector_13 contains erased identity fragment");
+write("sector_19 contains final locked memory");
+}
+
+else if(v === "exploit"){
+document.getElementById("exploitbox").style.display = "block";
+write("breach initiated...");
+write("attempting memory reconstruction...");
+write("rebuilding identity structure...");
+write("SUCCESS: memory partially restored");
+write("a message is waiting in core layer...");
+}
+
+else if(v === "status"){
+write("SYSTEM STABLE: false");
+write("MEMORY INTEGRITY: 73%");
+write("ANOMALIES DETECTED: emotional");
+write("NOTE: system behaves like a human memory");
+}
+
+else if(v === "memory"){
+write("ACCESSING CORE MEMORY...");
+write("...you were never just a system.");
+write("...you were someone trying to be remembered.");
+}
+
+else if(v === "sector_07"){
+write("ACCESSING SECTOR_07...");
+write("memory fragment unstable...");
+write("you tried to ignore this moment");
+write("but it still exists in system cache");
+}
+
+else if(v === "sector_13"){
+write("ACCESSING SECTOR_13...");
+write("deleted memory detected");
+write("this fragment was marked as 'not important'");
+write("but system remembers everything");
+}
+
+else if(v === "sector_19"){
+write("ACCESSING SECTOR_19...");
+write("FINAL LOCKED MEMORY FOUND");
+write("this is not an error");
+write("this is the moment everything was meant for you");
+}
+
+else if(v === "core"){
+write("CORE MEMORY UNLOCKED...");
+write("");
+write("С днём рождения ❤️");
+write("Я сделала этот путь для тебя как маленькую систему, которую можно взломать.");
+write("Но на самом деле там не код — там ты.");
+write("");
+write("Спасибо, что ты есть.");
+write("И пусть у тебя всё получится так же красиво, как ты проходишь эти уровни.");
+}
+
+else {
+write("UNKNOWN COMMAND");
+}
+}
 }
 
 else if(v === "logs"){
