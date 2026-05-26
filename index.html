@@ -154,6 +154,11 @@ hidden fragment unlocked
 <script>
 const terminal = document.getElementById("terminal");
 const status = document.getElementById("status");
+  let holesFound = {
+  sector_07: false,
+  sector_13: false,
+  sector_19: false
+};
 
 function write(t){
 terminal.innerHTML += t + "\n";
@@ -168,7 +173,11 @@ input.value = "";
 write("> " + v);
 
 if(v === "help"){
-write("commands: help / logs / scan / exploit / status / core");
+write("доступные команды:");
+write("logs");
+write("scan");
+write("status");
+write("???");
 }
 
 else if(v === "logs"){
