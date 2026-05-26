@@ -152,6 +152,10 @@ hidden fragment unlocked
 </div>
 
 <script>
+  window.onerror = function(msg){
+  console.log("JS ERROR:", msg);
+  return false;
+};
 const terminal = document.getElementById("terminal");
 const status = document.getElementById("status");
   let holesFound = {
