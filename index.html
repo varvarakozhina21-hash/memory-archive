@@ -177,6 +177,7 @@ if(holesFound.sector_13) found++;
 if(holesFound.sector_19) found++;
 
 return Math.floor((found / total) * 100);
+  
 }
 function run(){
 
@@ -214,14 +215,35 @@ write("SYSTEM OK");
 }
 
 else if(v === "core"){
+else if(v === "core"){
+
 let p = getProgress();
+
+if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
 
 write("CORE LOCKED...");
 write("восстановление памяти...");
 write("прогресс: " + p + "%");
 write("");
 write("нужно найти все фрагменты");
+
 return;
+}
+
+write("CORE MEMORY UNLOCKED...");
+write("ПРОВЕРКА ЗАВЕРШЕНА...");
+write("АНАЛИЗ ОБЪЕКТА...");
+write("");
+
+write("Система: классификация завершена.");
+write("Статус: объект не является стандартным пользователем.");
+write("Уровень значимости: высокий.");
+
+write("");
+write("С днём рождения ❤️");
+write("Система зафиксировала тебя в памяти.");
+
+}
 }
 
 write("CORE MEMORY UNLOCKED...");
