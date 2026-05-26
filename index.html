@@ -6,13 +6,12 @@
 <title>MEMORY_ARCHIVE</title>
 
 <style>
-
 body{
 margin:0;
-background:black;
-color:#00ff88;
+background:#05070d;
+color:#7aa7ff;
 font-family:monospace;
-overflow-x:hidden;
+overflow:hidden;
 }
 
 .scanline{
@@ -23,7 +22,7 @@ background:repeating-linear-gradient(
 0deg,
 transparent,
 transparent 2px,
-rgba(0,255,136,.05) 3px
+rgba(122,167,255,.05) 3px
 );
 }
 
@@ -31,31 +30,40 @@ rgba(0,255,136,.05) 3px
 max-width:900px;
 margin:40px auto;
 padding:20px;
-border:1px solid #00ff88;
+border:1px solid rgba(122,167,255,.4);
+background:rgba(10,14,25,.6);
+backdrop-filter: blur(6px);
+box-shadow:0 0 30px rgba(122,167,255,.08);
 }
 
 .glitch{
-animation:glitch 1s infinite;
+animation:glitch 1.2s infinite;
+color:#9bc2ff;
 }
 
 @keyframes glitch{
-0%{text-shadow:2px 0 red,-2px 0 blue;}
-50%{text-shadow:-2px 0 red,2px 0 blue;}
-100%{text-shadow:2px 0 red,-2px 0 blue;}
+0%{text-shadow:2px 0 #ff4d6d,-2px 0 #4dd2ff;}
+50%{text-shadow:-2px 0 #ff4d6d,2px 0 #4dd2ff;}
+100%{text-shadow:2px 0 #ff4d6d,-2px 0 #4dd2ff;}
 }
 
 input,button{
 width:100%;
 padding:10px;
 margin-top:10px;
-background:black;
-border:1px solid #00ff88;
-color:#00ff88;
+background:#0a0f1c;
+border:1px solid rgba(122,167,255,.5);
+color:#7aa7ff;
 font-family:monospace;
 }
 
 button{
 cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+background:#111a2e;
 }
 
 #terminal{
@@ -63,10 +71,10 @@ margin-top:20px;
 white-space:pre-wrap;
 height:300px;
 overflow-y:auto;
-border:1px solid #00ff88;
+border:1px solid rgba(122,167,255,.3);
 padding:10px;
+background:rgba(0,0,0,.2);
 }
-
 </style>
 </head>
 
