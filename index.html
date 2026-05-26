@@ -152,7 +152,26 @@ hidden fragment unlocked
 </div>
 
 <script>
-
+let holesFound = {
+  sector_07: false,
+  else if(v === "sector_07"){
+holesFound.sector_07 = true;
+write("SECTOR 07 найден...");
+write("фрагмент памяти восстановлен");
+}
+  sector_13: false,
+    else if(v === "sector_13"){
+holesFound.sector_13 = true;
+write("SECTOR 13 найден...");
+write("что-то личное всплыло...");
+}
+  sector_19: false
+  else if(v === "sector_19"){
+holesFound.sector_19 = true;
+write("SECTOR 19 найден...");
+write("последний фрагмент восстановлен");
+}
+};
 const terminal = document.getElementById("terminal");
 const status = document.getElementById("status");
 
@@ -229,16 +248,19 @@ write("this is the moment everything was meant for you");
 }
 
 else if(v === "core"){
+
+if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
+write("CORE LOCKED...");
+write("нужно восстановить все 3 фрагмента памяти");
+return;
+}
+
 write("CORE MEMORY UNLOCKED...");
-write("ПРОВЕРКА ЗАВЕРШЕНА...");
-write("АНАЛИЗ ОБЪЕКТА...");
-write("");
-write("Система: классификация завершена.");
-write("Статус: объект не является стандартным пользователем.");
-write("Уровень значимости: высокий.");
 write("");
 write("С днём рождения ❤️");
-write("Система зафиксировала тебя в памяти.");
+write("Система собрала всю память.");
+write("Теперь она принадлежит только тебе.");
+}
 }
 
 else {
