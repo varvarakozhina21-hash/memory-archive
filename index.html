@@ -152,42 +152,48 @@ hidden fragment unlocked
 </div>
 
 <script>
-  window.onerror = function(msg){
-  console.log("JS ERROR:", msg);
-  return false;
+<script>
+
+window.onerror=function(msg){
+console.log("JS ERROR:",msg);
+return false;
 };
-const terminal = document.getElementById("terminal");
-const status = document.getElementById("status");
-  let holesFound = {
-  sector_07: false,
-  sector_13: false,
-  sector_19: false
+
+const terminal=document.getElementById("terminal");
+const status=document.getElementById("status");
+
+let holesFound={
+sector_07:false,
+sector_13:false,
+sector_19:false
 };
 
 function write(t){
-terminal.innerHTML += t + "\n";
+terminal.innerHTML+=t+"\n";
 }
+
 function getProgress(){
 
-let total = 3;
-let found = 0;
+let total=3;
+let found=0;
 
 if(holesFound.sector_07) found++;
 if(holesFound.sector_13) found++;
 if(holesFound.sector_19) found++;
 
-return Math.floor((found / total) * 100);
-  
+return Math.floor((found/total)*100);
+
 }
+
 function run(){
 
-const input = document.getElementById("cmd");
-const v = input.value.trim().toLowerCase();
-input.value = "";
+const input=document.getElementById("cmd");
+const v=input.value.trim().toLowerCase();
+input.value="";
 
-write("> " + v);
+write("> "+v);
 
-if(v === "help"){
+if(v==="help"){
 write("доступные команды:");
 write("logs");
 write("scan");
@@ -195,67 +201,66 @@ write("status");
 write("???");
 }
 
-else if(v === "logs"){
-write("loading logs...");
+else if(v==="logs"){
+write("загрузка логов...");
 write("log_01 ... log_19");
 }
 
-else if(v === "scan"){
-write("scanning system...");
-write("3 anomalies detected");
+else if(v==="scan"){
+write("сканирование...");
+write("обнаружены нестабильные участки");
 }
 
-else if(v === "exploit"){
-write("breach initiated...");
-write("memory fragments found");
+else if(v==="exploit"){
+write("поиск уязвимостей...");
+write("найдены скрытые следы");
 }
 
-else if(v === "status"){
-write("SYSTEM OK");
+else if(v==="status"){
+write("система активна");
 }
 
-else if(v === "core"){
-
-let p = getProgress();
-if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
-
-write("CORE LOCKED...");
-write("восстановление памяти...");
-write("прогресс: " + p + "%");
-write("");
-write("нужно найти все фрагменты");
-
-return;
-}
-
-write("CORE MEMORY UNLOCKED...");
-write("ПРОВЕРКА ЗАВЕРШЕНА...");
-write("АНАЛИЗ ОБЪЕКТА...");
-write("");
-
-write("Система: классификация завершена.");
-write("Статус: объект не является стандартным пользователем.");
-write("Уровень значимости: высокий.");
-
-write("");
-write("С днём рождения ❤️");
-write("Система зафиксировала тебя в памяти.");
-else if(v === "sector_07"){
-holesFound.sector_07 = true;
+else if(v==="sector_07"){
+holesFound.sector_07=true;
 write("SECTOR 07 найден...");
 write("фрагмент памяти восстановлен");
 }
 
-else if(v === "sector_13"){
-holesFound.sector_13 = true;
+else if(v==="sector_13"){
+holesFound.sector_13=true;
 write("SECTOR 13 найден...");
-write("что-то личное всплыло...");
+write("обнаружен скрытый след");
 }
 
-else if(v === "sector_19"){
-holesFound.sector_19 = true;
+else if(v==="sector_19"){
+holesFound.sector_19=true;
 write("SECTOR 19 найден...");
-write("последний фрагмент восстановлен");
+write("обнаружен последний фрагмент");
+}
+
+else if(v==="core"){
+
+let p=getProgress();
+
+if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
+
+write("CORE LOCKED...");
+write("восстановление памяти...");
+write("прогресс: "+p+"%");
+write("нужно найти все фрагменты");
+
+return;
+
+}
+
+write("CORE MEMORY UNLOCKED...");
+write("");
+write("Система: классификация завершена");
+write("Уровень значимости: высокий");
+write("");
+write("С днём рождения ❤️");
+write("Система зафиксировала тебя в памяти");
+
 }
 
 else{
@@ -263,12 +268,12 @@ write("UNKNOWN COMMAND");
 }
 
 }
-    
-else{
-write("UNKNOWN COMMAND");
-}
 
-}
+setTimeout(()=>{
+status.innerText="> CORE NODE ONLINE";
+},1200);
+
+</script>
 </script>
 
 </body>
