@@ -6,87 +6,60 @@
 <title>MEMORY_ARCHIVE</title>
 
 <style>
-body {
-margin: 0;
-background: black;
-color: #00ff88;
-font-family: monospace;
-overflow-x: hidden;
+
+body{
+margin:0;
+background:black;
+color:#00ff88;
+font-family:monospace;
+overflow-x:hidden;
 }
 
-.scanline {
-position: fixed;
-inset: 0;
-background: repeating-linear-gradient(
+.scanline{
+position:fixed;
+inset:0;
+pointer-events:none;
+background:repeating-linear-gradient(
 0deg,
 transparent,
 transparent 2px,
-rgba(0,255,136,0.05) 3px
+rgba(0,255,136,.05) 3px
 );
-pointer-events: none;
 }
 
-.container {
-max-width: 900px;
-margin: 40px auto;
-padding: 20px;
-border: 1px solid #00ff88;
+.container{
+max-width:900px;
+margin:40px auto;
+padding:20px;
+border:1px solid #00ff88;
 }
 
-h1 {
-font-size: 22px;
+.glitch{
+animation:glitch 1s infinite;
 }
 
-.glitch {
-animation: glitch 1s infinite;
+@keyframes glitch{
+0%{text-shadow:2px 0 red,-2px 0 blue;}
+50%{text-shadow:-2px 0 red,2px 0 blue;}
+100%{text-shadow:2px 0 red,-2px 0 blue;}
 }
 
-@keyframes glitch {
-0% { text-shadow: 2px 0 red, -2px 0 blue; }
-50% { text-shadow: -2px 0 red, 2px 0 blue; }
-100% { text-shadow: 2px 0 red, -2px 0 blue; }
+input,button{
+width:100%;
+padding:10px;
+margin-top:10px;
+background:black;
+border:1px solid #00ff88;
+color:#00ff88;
+font-family:monospace;
 }
 
-#terminal {
-margin-top: 20px;
-white-space: pre-wrap;
-min-height: 200px;
+#terminal{
+margin-top:20px;
+white-space:pre-wrap;
+min-height:250px;
 }
 
-input {
-width: 100%;
-padding: 10px;
-margin-top: 10px;
-background: black;
-border: 1px solid #00ff88;
-color: #00ff88;
-font-family: monospace;
-}
-
-button {
-width: 100%;
-padding: 10px;
-margin-top: 10px;
-background: black;
-border: 1px solid #00ff88;
-color: #00ff88;
-cursor: pointer;
-}
-
-.logbox {
-margin-top: 20px;
-display: none;
-border: 1px dashed #00ff88;
-padding: 10px;
-}
-
-.blink {
-animation: blink 1s infinite;
-}
-
-@keyframes blink {
-50% { opacity: 0; }
-}
 </style>
 </head>
 
@@ -96,68 +69,22 @@ animation: blink 1s infinite;
 
 <div class="container">
 
-<h1 class="glitch">MEMORY_ARCHIVE // CORE NODE</h1>
+<h1 class="glitch">
+MEMORY_ARCHIVE // CORE NODE
+</h1>
 
-<p id="status">> SYSTEM INITIALIZING...</p>
+<p id="status">
+> SYSTEM INITIALIZING...
+</p>
 
 <input id="cmd" placeholder="enter command">
 <button onclick="run()">EXECUTE</button>
 
 <div id="terminal"></div>
 
-<div class="logbox" id="logs">
-<h3>MEMORY LOGS (19 FRAGMENTS)</h3>
-<pre>
-log_01 system boot
-log_02 user detected
-log_03 authentication success
-log_04 memory sync
-log_05 anomaly detected
-log_06 trace initiated
-log_07 corruption rising
-log_08 hidden sector found
-log_09 unstable fragment
-log_10 core link established
-log_11 unknown signal
-log_12 memory gap
-log_13 fractured node
-log_14 unstable sector
-log_15 warning issued
-log_16 corrupted entry
-log_17 anomaly spike
-log_18 deep scan active
-log_19 CORE MEMORY LOCKED
-</pre>
-</div>
-
-<div class="logbox" id="scanbox">
-<h3>SCAN RESULT</h3>
-<pre>
-VULNERABILITIES DETECTED:
-- sector_07
-- sector_13
-- sector_19
-</pre>
-</div>
-
-<div class="logbox" id="exploitbox">
-<h3>EXPLOIT RESULT</h3>
-<pre>
-ACCESS GRANTED...
-/memory/sector_07 recovered
-hidden fragment unlocked
-</pre>
-</div>
-
 </div>
 
 <script>
-<script>
-
-window.onerror=function(msg){
-console.log("JS ERROR:",msg);
-return false;
-};
 
 const terminal=document.getElementById("terminal");
 const status=document.getElementById("status");
@@ -168,92 +95,108 @@ sector_13:false,
 sector_19:false
 };
 
-function write(t){
-terminal.innerHTML+=t+"\n";
+function write(text){
+terminal.innerHTML+=text+"\n";
 }
 
 function getProgress(){
 
-let total=3;
 let found=0;
 
 if(holesFound.sector_07) found++;
 if(holesFound.sector_13) found++;
 if(holesFound.sector_19) found++;
 
-return Math.floor((found/total)*100);
+return Math.floor(found/3*100);
 
 }
 
 function run(){
 
-const input=document.getElementById("cmd");
-const v=input.value.trim().toLowerCase();
-input.value="";
+const v=document.getElementById("cmd")
+.value
+.trim()
+.toLowerCase();
+
+document.getElementById("cmd").value="";
 
 write("> "+v);
 
 if(v==="help"){
+
 write("доступные команды:");
 write("logs");
 write("scan");
 write("status");
 write("???");
+
 }
 
 else if(v==="logs"){
+
 write("загрузка логов...");
-write("log_01 ... log_19");
+write("обнаружено 19 фрагментов");
+
 }
 
 else if(v==="scan"){
+
 write("сканирование...");
 write("обнаружены нестабильные участки");
-}
 
-else if(v==="exploit"){
-write("поиск уязвимостей...");
-write("найдены скрытые следы");
 }
 
 else if(v==="status"){
+
 write("система активна");
+write("стабильность памяти: 73%");
+
 }
 
 else if(v==="sector_07"){
+
 holesFound.sector_07=true;
+
 write("SECTOR 07 найден...");
 write("фрагмент памяти восстановлен");
+
 }
 
 else if(v==="sector_13"){
+
 holesFound.sector_13=true;
+
 write("SECTOR 13 найден...");
 write("обнаружен скрытый след");
+
 }
 
 else if(v==="sector_19"){
+
 holesFound.sector_19=true;
+
 write("SECTOR 19 найден...");
-write("обнаружен последний фрагмент");
+write("найден последний фрагмент");
+
 }
 
 else if(v==="core"){
 
 let p=getProgress();
 
-if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
+if(p<100){
 
 write("CORE LOCKED...");
 write("восстановление памяти...");
 write("прогресс: "+p+"%");
-write("нужно найти все фрагменты");
 
 return;
 
 }
 
 write("CORE MEMORY UNLOCKED...");
+write("");
+write("ПРОВЕРКА ЗАВЕРШЕНА");
 write("");
 write("Система: классификация завершена");
 write("Уровень значимости: высокий");
@@ -264,16 +207,20 @@ write("Система зафиксировала тебя в памяти");
 }
 
 else{
+
 write("UNKNOWN COMMAND");
+
 }
 
 }
 
 setTimeout(()=>{
-status.innerText="> CORE NODE ONLINE";
+
+status.innerText=
+"> CORE NODE ONLINE";
+
 },1200);
 
-</script>
 </script>
 
 </body>
