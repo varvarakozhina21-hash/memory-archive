@@ -1,97 +1,27 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEMORY_ARCHIVE</title>
-
-<style>
-
-body{
-margin:0;
-background:black;
-color:#00ff88;
-font-family:monospace;
-overflow-x:hidden;
-}
-
-.scanline{
-position:fixed;
-inset:0;
-pointer-events:none;
-background:repeating-linear-gradient(
-0deg,
-transparent,
-transparent 2px,
-rgba(0,255,136,.05) 3px
-);
-}
-
-.container{
-max-width:900px;
-margin:40px auto;
-padding:20px;
-border:1px solid #00ff88;
-}
-
-.glitch{
-animation:glitch 1s infinite;
-}
-
-@keyframes glitch{
-0%{text-shadow:2px 0 red,-2px 0 blue;}
-50%{text-shadow:-2px 0 red,2px 0 blue;}
-100%{text-shadow:2px 0 red,-2px 0 blue;}
-}
-
-input,button{
-width:100%;
-padding:10px;
-margin-top:10px;
-background:black;
-border:1px solid #00ff88;
-color:#00ff88;
-font-family:monospace;
-}
-
-button{
-cursor:pointer;
-}
-
-#terminal{
-margin-top:20px;
-white-space:pre-wrap;
-min-height:250px;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="scanline"></div>
-
-<div class="container">
-
-<h1 class="glitch">
-MEMORY_ARCHIVE // CORE NODE
-</h1>
-
-<p id="status">
-> SYSTEM INITIALIZING...
-</p>
-
-<input id="cmd" placeholder="enter command">
-<button onclick="run()">EXECUTE</button>
-
-<div id="terminal"></div>
-
-</div>
-
 <script>
 
 const terminal=document.getElementById("terminal");
 const status=document.getElementById("status");
+const input=document.getElementById("cmd");
+
+/* SOUND (простая имитация терминала) */
+function beep(){
+try{
+const ctx=new (window.AudioContext||window.webkitAudioContext)();
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
+
+osc.type="square";
+osc.frequency.value=600;
+gain.gain.value=0.03;
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+osc.start();
+osc.stop(ctx.currentTime+0.05);
+}catch(e){}
+}
 
 let holesFound={
 sector_07:false,
@@ -100,8 +30,15 @@ sector_19:false
 };
 
 function write(text){
+
 terminal.innerHTML+=text+"\n";
 terminal.scrollTop=terminal.scrollHeight;
+
+/* лёгкий “глитч шанс” */
+if(Math.random()<0.08){
+terminal.innerHTML+="\n[GLITCH DETECTED]\n";
+}
+
 }
 
 function getProgress(){
@@ -116,103 +53,103 @@ return Math.floor(found/3*100);
 
 }
 
+/* ENTER */
+input.addEventListener("keydown", function(e){
+if(e.key==="Enter"){
+run();
+}
+});
+
 function run(){
 
-const input=document.getElementById("cmd");
-const v=input.value.trim().toLowerCase();
+beep();
 
+const v=input.value.trim().toLowerCase();
 input.value="";
 
 write("> "+v);
 
+/* HELP */
 if(v==="help"){
-
-write("AVAILABLE COMMANDS:");
-write("logs");
-write("scan");
-write("status");
-write("sector_##");
-write("???");
-
+write("AVAILABLE:");
+write("logs / scan / status / sector_## / core / trace");
 }
 
+/* LOGS */
 else if(v==="logs"){
-
-write("Loading memory logs...");
-write("19 sectors detected");
-
+write("[SYSTEM] loading archive...");
+write("[MEMORY] 19 nodes detected");
 }
 
+/* SCAN */
 else if(v==="scan"){
-
-write("Scanning memory...");
-write("Anomalies detected: 3");
-
+write("[SCAN] deep analysis running...");
+write("[SCAN] anomalies: 3");
 }
 
+/* STATUS */
 else if(v==="status"){
-
-write("System status: ONLINE");
-write("Memory integrity: 73%");
-
+write("[SYSTEM] online");
+write("[MEMORY] integrity stable");
 }
 
+/* TRACE (пасхалка) */
+else if(v==="trace"){
+write("[TRACE] searching hidden layer...");
+write("...signal unstable");
+write("user memory imprint detected");
+write(">> connection unclear");
+}
+
+/* SECTORS */
 else if(v.startsWith("sector_")){
 
 if(v==="sector_07"){
-
 holesFound.sector_07=true;
-
-write("Scanning sector...");
-write("Аномалия обнаружена");
-write("Восстановлен скрытый фрагмент памяти");
-
+write("[NODE 07]");
+write("anomaly detected");
+write("memory fragment partially recovered");
+write("...something feels familiar");
 }
 
 else if(v==="sector_13"){
-
 holesFound.sector_13=true;
-
-write("Scanning sector...");
-write("Аномалия обнаружена");
-write("Обнаружен повреждённый след");
-
+write("[NODE 13]");
+write("corrupted signature found");
+write("data reconstruction unstable");
+write("signal resembles emotional trace");
 }
 
 else if(v==="sector_19"){
-
 holesFound.sector_19=true;
-
-write("Scanning sector...");
-write("Аномалия обнаружена");
-write("Найден последний скрытый фрагмент");
-
+write("[NODE 19]");
+write("hidden fragment unlocked");
+write("core proximity detected");
+write("final trace acquired");
 }
 
 else{
-
-write("Scanning sector...");
-write("Status: OK");
-write("Integrity: 100%");
-write("No anomalies detected");
-
+write("[NODE] clean sector");
+write("status: OK");
+write("no anomalies detected");
 }
 
 }
 
+/* CORE */
 else if(v==="core"){
 
 let p=getProgress();
 
 if(p<100){
-
-write("CORE LOCKED");
-write("Recovery progress: "+p+"%");
+write("[CORE] locked");
+write("reconstruction: "+p+"%");
+write("missing fragments detected");
 return;
-
 }
 
-write("CORE MEMORY UNLOCKED");
+/* ВАЖНО: твое послание НЕ ИЗМЕНЕНО */
+write("[CORE] MEMORY UNLOCKED");
 write("");
 write("ПРОВЕРКА ЗАВЕРШЕНА...");
 write("АНАЛИЗ ОБЪЕКТА...");
@@ -224,23 +161,25 @@ write("");
 write("С днём рождения ❤️");
 write("Система зафиксировала тебя в памяти.");
 
-}
-
-else{
-
-write("UNKNOWN COMMAND");
-
-}
-
-}
-
+/* дополнительная атмосфера (не трогаю смысл) */
 setTimeout(()=>{
+write("");
+write("[SYSTEM] connection terminated");
+write("[SYSTEM] memory archive sealed");
+},800);
 
+}
+
+/* UNKNOWN */
+else{
+write("[ERROR] unknown command");
+}
+
+}
+
+/* старт */
+setTimeout(()=>{
 status.innerText="> CORE NODE ONLINE";
-
 },1200);
 
 </script>
-
-</body>
-</html>
