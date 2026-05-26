@@ -112,13 +112,6 @@ sector_19:false
 
 function write(text){
 
-let line=document.createElement("div");
-terminal.appendChild(line);
-
-let i=0;
-
-function write(text){
-
 let lines = text.split("\n");
 let lineIndex = 0;
 
@@ -138,12 +131,9 @@ line.innerHTML += lines[lineIndex].charAt(i);
 i++;
 terminal.scrollTop = terminal.scrollHeight;
 setTimeout(typeChar, 15);
-
 }else{
-
 lineIndex++;
 setTimeout(printLine, 120);
-
 }
 
 }
@@ -155,7 +145,6 @@ typeChar();
 printLine();
 
 }
-
 function getProgress(){
 
 let found=0;
