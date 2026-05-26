@@ -199,10 +199,29 @@ else if(v === "status"){
 write("SYSTEM OK");
 }
 
-else if(v === "core"){
+else if(v === "core"){else if(v === "core"){
+
+if(!holesFound.sector_07 || !holesFound.sector_13 || !holesFound.sector_19){
+write("CORE LOCKED...");
+write("нужно восстановить все 3 фрагмента памяти");
+write("прогресс: " +
+  (holesFound.sector_07 ? "✓" : "✗") + " 07  " +
+  (holesFound.sector_13 ? "✓" : "✗") + " 13  " +
+  (holesFound.sector_19 ? "✓" : "✗") + " 19");
+return;
+}
+
 write("CORE MEMORY UNLOCKED...");
+write("ПРОВЕРКА ЗАВЕРШЕНА...");
+write("АНАЛИЗ ОБЪЕКТА...");
+write("");
+write("Система: классификация завершена.");
+write("Статус: объект не является стандартным пользователем.");
+write("Уровень значимости: высокий.");
+write("");
 write("С днём рождения ❤️");
-write("Система зафиксировала тебя как важную память.");
+write("Система зафиксировала тебя в памяти.");
+}
 }
 
 else if(v === "test"){
