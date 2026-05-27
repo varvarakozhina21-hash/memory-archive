@@ -12,7 +12,8 @@ body{
   animation: bgBreath 20s ease-in-out infinite;
   color:#cbd5e1;
   font-family:monospace;
-  overflow:hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 @keyframes bgBreath{
@@ -37,6 +38,7 @@ body::before{
   pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.03) 4px);
   opacity:0.5;
+  z-index:999;
 }
 
 .container{
@@ -48,6 +50,7 @@ body::before{
   backdrop-filter: blur(10px);
   box-shadow:0 0 30px rgba(0,0,0,0.6);
   animation: containerPulse 10s ease-in-out infinite;
+  padding-bottom: 60px;
 }
 
 @keyframes containerPulse{
@@ -77,6 +80,7 @@ input,button{
   color:#d7e3f4;
   font-family:monospace;
   outline:none;
+  box-sizing: border-box;
 }
 
 button{
@@ -100,14 +104,16 @@ button:hover{
   color:#d7e3f4;
 }
 
+/* ====== FINAL SCENE ====== */
 #final-scene{
   display:none;
-  margin-top:20px;
+  margin-top:30px;
   position:relative;
   overflow:hidden;
-  padding: 24px 20px;
-  border:1px solid rgba(160,180,210,0.18);
-  background:rgba(0,0,0,0.25);
+  padding: 28px 20px 32px;
+  border:1px solid rgba(100,140,220,0.3);
+  background:rgba(0,0,0,0.35);
+  border-radius: 4px;
 }
 
 .particles{
@@ -132,7 +138,7 @@ button:hover{
   0%{ transform:translateY(0) translateX(0); opacity:0; }
   10%{ opacity:0.6; }
   90%{ opacity:0.3; }
-  100%{ transform:translateY(-400px) translateX(var(--drift)); opacity:0; }
+  100%{ transform:translateY(-500px) translateX(var(--drift)); opacity:0; }
 }
 
 #final-content{ position:relative; z-index:2; }
@@ -250,7 +256,7 @@ button:hover{
 
 <script>
 const terminal = document.getElementById("terminal");
-const status = document.getElementById("status");
+const statusEl = document.getElementById("status");
 const input = document.getElementById("cmd");
 
 input.addEventListener("keydown", function(e){
@@ -379,10 +385,15 @@ async function showFinalScene(){
   if(finalStarted) return;
   finalStarted = true;
 
-  document.getElementById("final-scene").style.display = "block";
+  const scene = document.getElementById("final-scene");
+  scene.style.display = "block";
   makeParticles();
 
-  await sleep(600);
+  // плавный скролл к финальной сцене
+  await sleep(200);
+  scene.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  await sleep(800);
 
   for(let i = 0; i < finalLines.length; i++){
     const { text, cls } = finalLines[i];
@@ -391,6 +402,8 @@ async function showFinalScene(){
     if(!text){ el.className = "fline empty"; await sleep(180); continue; }
     if(cls === "hl" && text.includes("❤")) chime();
     await typeFinalLine(el, text, cls);
+    // скроллим страницу вниз по мере появления текста
+    scene.scrollIntoView({ behavior: "smooth", block: "end" });
     await sleep(cls === "hl" ? 280 : 160);
   }
 
@@ -409,38 +422,107 @@ function run(){
   write("INPUT: " + v);
 
   if(v === "help"){
-    write("AVAILABLE COMMANDS:");
-    write("logs\nscan\nstatus\nsector_##\ncore");
+    write("AVAILABLE COMMANDS:\nlogs — system memory log\nscan — detect anomalies\nstatus — system integrity\nsector_## — access sector node\ncore — attempt core unlock");
   }
   else if(v === "logs"){
-    write("Loading memory logs...\n19 sectors detected");
+    write(
+      "Loading memory logs...\n" +
+      "---\n" +
+      "log_01 :: system boot — OK\n" +
+      "log_02 :: user detected\n" +
+      "log_03 :: auth success\n" +
+      "log_04 :: memory sync initiated\n" +
+      "log_05 :: anomaly detected in sector_07\n" +
+      "log_06 :: trace running...\n" +
+      "log_07 :: WARNING — sector_07 unstable\n" +
+      "log_08 :: hidden path found near node 13\n" +
+      "log_09 :: core fragment unstable\n" +
+      "log_10 :: core link lost\n" +
+      "log_11 :: unknown signal from sector_13\n" +
+      "log_12 :: memory gap detected\n" +
+      "log_13 :: fragment trace leads to sector_19\n" +
+      "log_14 :: node 19 — corrupted\n" +
+      "log_15 :: WARNING — 3 sectors require manual access\n" +
+      "log_16 :: recovery possible via: sector_07, sector_13, sector_19\n" +
+      "log_17 :: core remains LOCKED until all fragments restored\n" +
+      "---"
+    );
   }
   else if(v === "scan"){
-    write("Scanning memory...\nAnomalies detected: 3\nsectors: 07 / 13 / 19");
+    write(
+      "Scanning memory sectors...\n" +
+      "..............................\n" +
+      "Anomalies detected: 3\n" +
+      ">> sector_07 — CORRUPTED\n" +
+      ">> sector_13 — CORRUPTED\n" +
+      ">> sector_19 — CORRUPTED\n" +
+      "Recommendation: access each sector manually.\n" +
+      "Core unlock available after full recovery."
+    );
   }
   else if(v === "status"){
     let p = getProgress();
-    write("System status: ONLINE\nMemory integrity: " + (73 + p/3).toFixed(0) + "%\nFragments recovered: " + p + "%");
+    let missing = [];
+    if(!holesFound.sector_07) missing.push("sector_07");
+    if(!holesFound.sector_13) missing.push("sector_13");
+    if(!holesFound.sector_19) missing.push("sector_19");
+    let missingStr = missing.length > 0 ? "Missing: " + missing.join(", ") : "All fragments recovered.";
+    write(
+      "System status: ONLINE\n" +
+      "Memory integrity: " + (73 + Math.floor(p/3.34)) + "%\n" +
+      "Fragments recovered: " + p + "%\n" +
+      missingStr
+    );
   }
   else if(v.startsWith("sector_")){
-    if(v === "sector_07"){ holesFound.sector_07 = true; write("УЗЕЛ 07 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
-    else if(v === "sector_13"){ holesFound.sector_13 = true; write("УЗЕЛ 13 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
-    else if(v === "sector_19"){ holesFound.sector_19 = true; write("УЗЕЛ 19 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
-    else{ write("Scanning sector...\nStatus: OK\nNo anomalies detected"); }
+    if(v === "sector_07"){
+      if(holesFound.sector_07){
+        write("УЗЕЛ 07 — уже восстановлен.");
+      } else {
+        holesFound.sector_07 = true;
+        write("УЗЕЛ 07 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
+      }
+    }
+    else if(v === "sector_13"){
+      if(holesFound.sector_13){
+        write("УЗЕЛ 13 — уже восстановлен.");
+      } else {
+        holesFound.sector_13 = true;
+        write("УЗЕЛ 13 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
+      }
+    }
+    else if(v === "sector_19"){
+      if(holesFound.sector_19){
+        write("УЗЕЛ 19 — уже восстановлен.");
+      } else {
+        holesFound.sector_19 = true;
+        write("УЗЕЛ 19 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
+      }
+    }
+    else{
+      write("Scanning sector...\nStatus: OK\nNo anomalies detected.");
+    }
   }
   else if(v === "core"){
     let p = getProgress();
-    write("CORE MEMORY CHECK...\nfragments found: " + p + "%");
-    if(p < 100){ write("CORE LOCKED\nmissing fragments: " + (3 - [holesFound.sector_07,holesFound.sector_13,holesFound.sector_19].filter(Boolean).length)); return; }
-    write("CORE MEMORY UNLOCKED\nINITIALIZING FINAL REPORT...");
-    setTimeout(showFinalScene, 2000);
+    write("CORE MEMORY CHECK...\nFragments found: " + p + "%");
+    if(p < 100){
+      let missing = [];
+      if(!holesFound.sector_07) missing.push("sector_07");
+      if(!holesFound.sector_13) missing.push("sector_13");
+      if(!holesFound.sector_19) missing.push("sector_19");
+      write("CORE LOCKED\nRestore missing fragments first:\n>> " + missing.join("\n>> "));
+      return;
+    }
+    write("ALL FRAGMENTS RESTORED\nCORE MEMORY UNLOCKED\nINITIALIZING FINAL REPORT...");
+    setTimeout(showFinalScene, 2200);
   }
   else{
-    write("UNKNOWN COMMAND");
+    write("UNKNOWN COMMAND\nType 'help' for available commands.");
   }
 }
 
-setTimeout(() => { status.innerText = "> CORE NODE ONLINE"; }, 1200);
+setTimeout(() => { statusEl.innerText = "> CORE NODE ONLINE"; }, 1200);
 </script>
 </body>
 </html>
