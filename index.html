@@ -51,6 +51,7 @@ body::before{
   box-shadow:0 0 30px rgba(0,0,0,0.6);
   animation: containerPulse 10s ease-in-out infinite;
   padding-bottom: 60px;
+  box-sizing: border-box;
 }
 
 @keyframes containerPulse{
@@ -83,15 +84,8 @@ input,button{
   box-sizing: border-box;
 }
 
-button{
-  cursor:pointer;
-  transition:0.2s;
-}
-
-button:hover{
-  background:#1a2433;
-  transform:translateY(-1px);
-}
+button{ cursor:pointer; transition:0.2s; }
+button:hover{ background:#1a2433; transform:translateY(-1px); }
 
 #terminal{
   margin-top:20px;
@@ -102,6 +96,55 @@ button:hover{
   padding:10px;
   background:rgba(0,0,0,0.25);
   color:#d7e3f4;
+  transition: filter 0.1s;
+}
+
+/* глитч эффект на терминале */
+#terminal.glitch-effect{
+  animation: termGlitch 0.6s steps(1) forwards;
+}
+
+@keyframes termGlitch{
+  0%  { filter: brightness(1)   hue-rotate(0deg);   transform: translateX(0); }
+  10% { filter: brightness(2)   hue-rotate(90deg);  transform: translateX(-3px); }
+  20% { filter: brightness(0.5) hue-rotate(180deg); transform: translateX(3px); }
+  30% { filter: brightness(1.8) hue-rotate(270deg); transform: translateX(-2px); opacity:0.7; }
+  40% { filter: brightness(1)   hue-rotate(0deg);   transform: translateX(2px); }
+  50% { filter: brightness(0.3) hue-rotate(45deg);  transform: translateX(-4px); opacity:0.5; }
+  60% { filter: brightness(2)   hue-rotate(180deg); transform: translateX(0);   opacity:1; }
+  70% { filter: brightness(1)   hue-rotate(0deg);   transform: translateX(-1px);}
+  80% { filter: brightness(1.5) hue-rotate(90deg);  transform: translateX(1px); opacity:0.8; }
+  90% { filter: brightness(1)   hue-rotate(0deg);   transform: translateX(0);   opacity:1; }
+  100%{ filter: brightness(1)   hue-rotate(0deg);   transform: translateX(0); }
+}
+
+/* глитч на всей странице */
+body.page-glitch{
+  animation: pageGlitch 0.5s steps(2) forwards, bgBreath 20s ease-in-out infinite;
+}
+
+@keyframes pageGlitch{
+  0%  { filter: brightness(1); }
+  15% { filter: brightness(1.4) saturate(2) hue-rotate(20deg); }
+  30% { filter: brightness(0.7) hue-rotate(-20deg); }
+  45% { filter: brightness(1.6) saturate(3) hue-rotate(40deg); }
+  60% { filter: brightness(0.9) hue-rotate(0deg); }
+  75% { filter: brightness(1.2) saturate(1.5); }
+  100%{ filter: brightness(1); }
+}
+
+/* мигание экрана */
+@keyframes screenFlash{
+  0%  { opacity:1; }
+  20% { opacity:0.3; }
+  40% { opacity:1; }
+  60% { opacity:0.6; }
+  80% { opacity:0.9; }
+  100%{ opacity:1; }
+}
+
+.screen-flash{
+  animation: screenFlash 0.4s steps(1) forwards !important;
 }
 
 /* ====== FINAL SCENE ====== */
@@ -135,9 +178,9 @@ button:hover{
 }
 
 @keyframes floatUp{
-  0%{ transform:translateY(0) translateX(0); opacity:0; }
-  10%{ opacity:0.6; }
-  90%{ opacity:0.3; }
+  0%  { transform:translateY(0) translateX(0); opacity:0; }
+  10% { opacity:0.6; }
+  90% { opacity:0.3; }
   100%{ transform:translateY(-500px) translateX(var(--drift)); opacity:0; }
 }
 
@@ -189,9 +232,8 @@ button:hover{
   display:block;
   min-height:1.6em;
 }
-
-.fline.hl{ color:#88bbff; font-weight:bold; }
-.fline.dim{ color:#4a6a8a; font-size:12px; }
+.fline.hl  { color:#88bbff; font-weight:bold; }
+.fline.dim { color:#4a6a8a; font-size:12px; }
 .fline.empty{ min-height:0.8em; }
 
 .cursor{
@@ -255,19 +297,61 @@ button:hover{
 </div>
 
 <script>
-const terminal = document.getElementById("terminal");
-const statusEl = document.getElementById("status");
-const input = document.getElementById("cmd");
+const terminal  = document.getElementById("terminal");
+const statusEl  = document.getElementById("status");
+const input     = document.getElementById("cmd");
 
-input.addEventListener("keydown", function(e){
-  if(e.key === "Enter") run();
-});
+input.addEventListener("keydown", e => { if(e.key === "Enter") run(); });
 
-let holesFound = { sector_07:false, sector_13:false, sector_19:false };
-let queue = [];
-let isWriting = false;
-let finalStarted = false;
+let holesFound  = { sector_07:false, sector_13:false, sector_19:false };
+let queue       = [];
+let isWriting   = false;
+let finalStarted= false;
 
+// =====================
+// MP3 ЗВУКИ
+// Положи файлы sound_07.mp3, sound_13.mp3, sound_19.mp3
+// в тот же репозиторий рядом с index.html
+// =====================
+function playSound(name){
+  try{
+    const audio = new Audio(name);
+    audio.volume = 0.7;
+    audio.play().catch(()=>{});
+  } catch(e){}
+}
+
+// =====================
+// ГЛИТЧ ЭФФЕКТЫ
+// =====================
+function triggerGlitch(){
+  // глитч терминала
+  terminal.classList.remove("glitch-effect");
+  void terminal.offsetWidth;
+  terminal.classList.add("glitch-effect");
+
+  // глитч страницы
+  document.body.classList.remove("page-glitch");
+  void document.body.offsetWidth;
+  document.body.classList.add("page-glitch");
+
+  // мигание контейнера
+  const container = document.querySelector(".container");
+  container.classList.remove("screen-flash");
+  void container.offsetWidth;
+  container.classList.add("screen-flash");
+
+  // убираем классы после анимации
+  setTimeout(()=>{
+    terminal.classList.remove("glitch-effect");
+    document.body.classList.remove("page-glitch");
+    container.classList.remove("screen-flash");
+  }, 700);
+}
+
+// =====================
+// ТЕРМИНАЛ — вывод текста
+// =====================
 function write(text){
   queue.push(text);
   if(!isWriting) processQueue();
@@ -276,23 +360,22 @@ function write(text){
 function processQueue(){
   if(queue.length === 0){ isWriting = false; return; }
   isWriting = true;
-  let text = queue.shift();
-  let lines = text.split("\n");
-  let lineIndex = 0;
+  let lines = queue.shift().split("\n");
+  let idx = 0;
 
   function printLine(){
-    if(lineIndex >= lines.length){ isWriting = false; processQueue(); return; }
+    if(idx >= lines.length){ isWriting = false; processQueue(); return; }
     let line = document.createElement("div");
     terminal.appendChild(line);
     let i = 0;
     function typeChar(){
-      if(i < lines[lineIndex].length){
-        line.innerHTML += lines[lineIndex].charAt(i);
+      if(i < lines[idx].length){
+        line.innerHTML += lines[idx].charAt(i);
         i++;
         terminal.scrollTop = terminal.scrollHeight;
         setTimeout(typeChar, 15);
       } else {
-        lineIndex++;
+        idx++;
         setTimeout(printLine, 120);
       }
     }
@@ -301,35 +384,37 @@ function processQueue(){
   printLine();
 }
 
+// =====================
+// ПРОГРЕСС
+// =====================
 function getProgress(){
-  let found = 0;
-  if(holesFound.sector_07) found++;
-  if(holesFound.sector_13) found++;
-  if(holesFound.sector_19) found++;
-  return Math.floor(found / 3 * 100);
+  return Math.floor(
+    ([holesFound.sector_07, holesFound.sector_13, holesFound.sector_19]
+      .filter(Boolean).length / 3) * 100
+  );
 }
 
+// =====================
+// BEEP / CHIME
+// =====================
 function beep(freq=700, dur=0.04, vol=0.04){
   try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
+    const ctx  = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = "square";
-    osc.frequency.value = freq;
-    gain.gain.value = vol;
-    osc.start();
-    osc.stop(ctx.currentTime + dur);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = "square"; osc.frequency.value = freq; gain.gain.value = vol;
+    osc.start(); osc.stop(ctx.currentTime + dur);
   } catch(e){}
 }
 
 function chime(){
-  [520, 660, 780].forEach((f, i) => {
-    setTimeout(() => beep(f, 0.12, 0.06), i * 120);
-  });
+  [520,660,780].forEach((f,i) => setTimeout(()=> beep(f,0.12,0.06), i*120));
 }
 
+// =====================
+// ФИНАЛЬНАЯ СЦЕНА
+// =====================
 const finalLines = [
   { text:"Система: классификация завершена.", cls:"dim" },
   { text:"", cls:"empty" },
@@ -353,30 +438,30 @@ const finalLines = [
 function makeParticles(){
   const c = document.getElementById("particles");
   c.innerHTML = "";
-  for(let i = 0; i < 22; i++){
+  for(let i=0;i<22;i++){
     const d = document.createElement("div");
     d.className = "dot";
-    d.style.setProperty("--dur", (4 + Math.random()*5) + "s");
-    d.style.setProperty("--delay", (Math.random()*6) + "s");
-    d.style.setProperty("--drift", (Math.random()*60 - 30) + "px");
-    d.style.left = (Math.random()*100) + "%";
+    d.style.setProperty("--dur",  (4+Math.random()*5)+"s");
+    d.style.setProperty("--delay",(Math.random()*6)+"s");
+    d.style.setProperty("--drift",(Math.random()*60-30)+"px");
+    d.style.left   = (Math.random()*100)+"%";
     d.style.bottom = "0px";
     c.appendChild(d);
   }
 }
 
-function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
 async function typeFinalLine(el, text, cls){
-  el.className = "fline " + (cls||"");
+  el.className = "fline "+(cls||"");
   if(!text) return;
   const cursor = document.createElement("span");
   cursor.className = "cursor";
   el.appendChild(cursor);
-  for(let i = 0; i < text.length; i++){
+  for(let i=0;i<text.length;i++){
     cursor.before(document.createTextNode(text[i]));
-    if(text[i] !== " ") beep(680 + Math.random()*80, 0.025, 0.025);
-    await sleep(22 + Math.random()*18);
+    if(text[i] !== " ") beep(680+Math.random()*80, 0.025, 0.025);
+    await sleep(22+Math.random()*18);
   }
   cursor.remove();
 }
@@ -389,22 +474,20 @@ async function showFinalScene(){
   scene.style.display = "block";
   makeParticles();
 
-  // плавный скролл к финальной сцене
+  // один раз скроллим вниз — и больше не дёргаем
   await sleep(200);
-  scene.scrollIntoView({ behavior: "smooth", block: "start" });
+  scene.scrollIntoView({ behavior:"smooth", block:"start" });
 
-  await sleep(800);
+  await sleep(900);
 
-  for(let i = 0; i < finalLines.length; i++){
-    const { text, cls } = finalLines[i];
+  for(let i=0;i<finalLines.length;i++){
+    const {text,cls} = finalLines[i];
     const el = document.createElement("span");
     document.getElementById("final-lines").appendChild(el);
-    if(!text){ el.className = "fline empty"; await sleep(180); continue; }
-    if(cls === "hl" && text.includes("❤")) chime();
+    if(!text){ el.className="fline empty"; await sleep(180); continue; }
+    if(cls==="hl" && text.includes("❤")) chime();
     await typeFinalLine(el, text, cls);
-    // скроллим страницу вниз по мере появления текста
-    scene.scrollIntoView({ behavior: "smooth", block: "end" });
-    await sleep(cls === "hl" ? 280 : 160);
+    await sleep(cls==="hl" ? 280 : 160);
   }
 
   await sleep(400);
@@ -416,13 +499,44 @@ async function showFinalScene(){
   document.getElementById("footer").style.opacity = "1";
 }
 
+// =====================
+// ОБРАБОТКА СЕКТОРОВ с глитчем
+// =====================
+async function activateSector(id, soundFile){
+  // 1. глитч и звук одновременно
+  triggerGlitch();
+  playSound(soundFile);
+
+  // 2. небольшая пауза — "зависание"
+  await sleep(300);
+
+  // 3. текст появляется после глитча
+  const p = getProgress();
+  write(
+    `УЗЕЛ ${id} АКТИВЕН\n` +
+    `фрагмент памяти восстановлен\n` +
+    `статус: стабилизирован\n` +
+    `прогресс: ${p}%`
+  );
+}
+
+// =====================
+// КОМАНДЫ
+// =====================
 function run(){
   const v = input.value.trim().toLowerCase();
   input.value = "";
-  write("INPUT: " + v);
+  write("INPUT: "+v);
 
   if(v === "help"){
-    write("AVAILABLE COMMANDS:\nlogs — system memory log\nscan — detect anomalies\nstatus — system integrity\nsector_## — access sector node\ncore — attempt core unlock");
+    write(
+      "AVAILABLE COMMANDS:\n" +
+      "logs   — system memory log\n" +
+      "scan   — detect anomalies\n" +
+      "status — system integrity\n" +
+      "sector_## — access sector node\n" +
+      "core   — attempt core unlock"
+    );
   }
   else if(v === "logs"){
     write(
@@ -443,7 +557,7 @@ function run(){
       "log_13 :: fragment trace leads to sector_19\n" +
       "log_14 :: node 19 — corrupted\n" +
       "log_15 :: WARNING — 3 sectors require manual access\n" +
-      "log_16 :: recovery possible via: sector_07, sector_13, sector_19\n" +
+      "log_16 :: recovery via: sector_07, sector_13, sector_19\n" +
       "log_17 :: core remains LOCKED until all fragments restored\n" +
       "---"
     );
@@ -461,57 +575,49 @@ function run(){
     );
   }
   else if(v === "status"){
-    let p = getProgress();
-    let missing = [];
-    if(!holesFound.sector_07) missing.push("sector_07");
-    if(!holesFound.sector_13) missing.push("sector_13");
-    if(!holesFound.sector_19) missing.push("sector_19");
-    let missingStr = missing.length > 0 ? "Missing: " + missing.join(", ") : "All fragments recovered.";
+    const p = getProgress();
+    const missing = [
+      !holesFound.sector_07 && "sector_07",
+      !holesFound.sector_13 && "sector_13",
+      !holesFound.sector_19 && "sector_19"
+    ].filter(Boolean);
     write(
       "System status: ONLINE\n" +
       "Memory integrity: " + (73 + Math.floor(p/3.34)) + "%\n" +
       "Fragments recovered: " + p + "%\n" +
-      missingStr
+      (missing.length ? "Missing: " + missing.join(", ") : "All fragments recovered.")
     );
   }
   else if(v.startsWith("sector_")){
     if(v === "sector_07"){
-      if(holesFound.sector_07){
-        write("УЗЕЛ 07 — уже восстановлен.");
-      } else {
-        holesFound.sector_07 = true;
-        write("УЗЕЛ 07 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
-      }
+      if(holesFound.sector_07){ write("УЗЕЛ 07 — уже восстановлен."); return; }
+      holesFound.sector_07 = true;
+      activateSector("07", "sound_07.mp3");
     }
     else if(v === "sector_13"){
-      if(holesFound.sector_13){
-        write("УЗЕЛ 13 — уже восстановлен.");
-      } else {
-        holesFound.sector_13 = true;
-        write("УЗЕЛ 13 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
-      }
+      if(holesFound.sector_13){ write("УЗЕЛ 13 — уже восстановлен."); return; }
+      holesFound.sector_13 = true;
+      activateSector("13", "sound_13.mp3");
     }
     else if(v === "sector_19"){
-      if(holesFound.sector_19){
-        write("УЗЕЛ 19 — уже восстановлен.");
-      } else {
-        holesFound.sector_19 = true;
-        write("УЗЕЛ 19 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: стабилизирован\nпрогресс: " + getProgress() + "%");
-      }
+      if(holesFound.sector_19){ write("УЗЕЛ 19 — уже восстановлен."); return; }
+      holesFound.sector_19 = true;
+      activateSector("19", "sound_19.mp3");
     }
     else{
       write("Scanning sector...\nStatus: OK\nNo anomalies detected.");
     }
   }
   else if(v === "core"){
-    let p = getProgress();
-    write("CORE MEMORY CHECK...\nFragments found: " + p + "%");
+    const p = getProgress();
+    write("CORE MEMORY CHECK...\nFragments found: "+p+"%");
     if(p < 100){
-      let missing = [];
-      if(!holesFound.sector_07) missing.push("sector_07");
-      if(!holesFound.sector_13) missing.push("sector_13");
-      if(!holesFound.sector_19) missing.push("sector_19");
-      write("CORE LOCKED\nRestore missing fragments first:\n>> " + missing.join("\n>> "));
+      const missing = [
+        !holesFound.sector_07 && "sector_07",
+        !holesFound.sector_13 && "sector_13",
+        !holesFound.sector_19 && "sector_19"
+      ].filter(Boolean);
+      write("CORE LOCKED\nRestore missing fragments first:\n>> "+missing.join("\n>> "));
       return;
     }
     write("ALL FRAGMENTS RESTORED\nCORE MEMORY UNLOCKED\nINITIALIZING FINAL REPORT...");
@@ -522,7 +628,7 @@ function run(){
   }
 }
 
-setTimeout(() => { statusEl.innerText = "> CORE NODE ONLINE"; }, 1200);
+setTimeout(()=>{ statusEl.innerText = "> CORE NODE ONLINE"; }, 1200);
 </script>
 </body>
 </html>
