@@ -4,380 +4,443 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEMORY_ARCHIVE</title>
-
 <style>
 body{
-margin:0;
-background: radial-gradient(circle at top, #121a26, #0b0f14 60%, #070a0f);
-background-size: 200% 200%;
-animation: bgBreath 20s ease-in-out infinite;
-color:#cbd5e1;
-font-family:monospace;
-overflow:hidden;
+  margin:0;
+  background: radial-gradient(circle at top, #121a26, #0b0f14 60%, #070a0f);
+  background-size: 200% 200%;
+  animation: bgBreath 20s ease-in-out infinite;
+  color:#cbd5e1;
+  font-family:monospace;
+  overflow:hidden;
 }
 
-/* мягкое “дыхание” системы */
 @keyframes bgBreath{
-0%{
-background-position: 0% 30%;
-filter: brightness(1);
-}
-50%{
-background-position: 100% 70%;
-filter: brightness(1.06);
-}
-100%{
-background-position: 0% 30%;
-filter: brightness(1);
-}
+  0%{ background-position: 0% 30%; filter: brightness(1); }
+  50%{ background-position: 100% 70%; filter: brightness(1.06); }
+  100%{ background-position: 0% 30%; filter: brightness(1); }
 }
 
-/* шум / зерно (очень мягкий) */
 body::before{
-content:"";
-position:fixed;
-inset:0;
-pointer-events:none;
-background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
-opacity:0.04;
-mix-blend-mode:overlay;
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+  opacity:0.04;
+  mix-blend-mode:overlay;
 }
 
-/* скан-линии */
 .scanline{
-position:fixed;
-inset:0;
-pointer-events:none;
-background:repeating-linear-gradient(
-0deg,
-transparent,
-transparent 3px,
-rgba(255,255,255,0.03) 4px
-);
-opacity:0.5;
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.03) 4px);
+  opacity:0.5;
 }
 
-/* основной блок */
 .container{
-max-width:900px;
-margin:40px auto;
-padding:20px;
-border:1px solid rgba(160,180,210,0.18);
-background:rgba(18,24,35,0.6);
-backdrop-filter: blur(10px);
-box-shadow:0 0 30px rgba(0,0,0,0.6);
-}
-
-/* заголовок с лёгкой “живостью” */
-.glitch{
-animation:glitch 1.6s infinite;
-color:#e6f0ff;
-letter-spacing:1px;
-}
-
-/* мягкий глитч */
-@keyframes glitch{
-0%{
-text-shadow:2px 0 rgba(255,120,140,0.3),
--2px 0 rgba(120,180,255,0.3);
-}
-50%{
-text-shadow:-2px 0 rgba(255,120,140,0.3),
-2px 0 rgba(120,180,255,0.3);
-}
-100%{
-text-shadow:2px 0 rgba(255,120,140,0.3),
--2px 0 rgba(120,180,255,0.3);
-}
-}
-
-/* input / button */
-input,button{
-width:100%;
-padding:10px;
-margin-top:10px;
-background:#121823;
-border:1px solid rgba(160,180,210,0.22);
-color:#d7e3f4;
-font-family:monospace;
-outline:none;
-}
-
-button{
-cursor:pointer;
-transition:0.2s;
-}
-
-button:hover{
-background:#1a2433;
-transform:translateY(-1px);
-}
-
-/* терминал */
-#terminal{
-margin-top:20px;
-white-space:pre-wrap;
-height:300px;
-overflow-y:auto;
-border:1px solid rgba(160,180,210,0.18);
-padding:10px;
-background:rgba(0,0,0,0.25);
-color:#d7e3f4;
-}
-
-/* лёгкое ощущение “живого интерфейса” */
-.container{
-animation: containerPulse 10s ease-in-out infinite;
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
+  border:1px solid rgba(160,180,210,0.18);
+  background:rgba(18,24,35,0.6);
+  backdrop-filter: blur(10px);
+  box-shadow:0 0 30px rgba(0,0,0,0.6);
+  animation: containerPulse 10s ease-in-out infinite;
 }
 
 @keyframes containerPulse{
-0%{ box-shadow:0 0 20px rgba(0,0,0,0.6); }
-50%{ box-shadow:0 0 35px rgba(90,120,180,0.12); }
-100%{ box-shadow:0 0 20px rgba(0,0,0,0.6); }
+  0%{ box-shadow:0 0 20px rgba(0,0,0,0.6); }
+  50%{ box-shadow:0 0 35px rgba(90,120,180,0.12); }
+  100%{ box-shadow:0 0 20px rgba(0,0,0,0.6); }
+}
+
+.glitch{
+  animation:glitch 1.6s infinite;
+  color:#e6f0ff;
+  letter-spacing:1px;
+}
+
+@keyframes glitch{
+  0%{ text-shadow:2px 0 rgba(255,120,140,0.3),-2px 0 rgba(120,180,255,0.3); }
+  50%{ text-shadow:-2px 0 rgba(255,120,140,0.3),2px 0 rgba(120,180,255,0.3); }
+  100%{ text-shadow:2px 0 rgba(255,120,140,0.3),-2px 0 rgba(120,180,255,0.3); }
+}
+
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  background:#121823;
+  border:1px solid rgba(160,180,210,0.22);
+  color:#d7e3f4;
+  font-family:monospace;
+  outline:none;
+}
+
+button{
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  background:#1a2433;
+  transform:translateY(-1px);
+}
+
+#terminal{
+  margin-top:20px;
+  white-space:pre-wrap;
+  height:300px;
+  overflow-y:auto;
+  border:1px solid rgba(160,180,210,0.18);
+  padding:10px;
+  background:rgba(0,0,0,0.25);
+  color:#d7e3f4;
+}
+
+#final-scene{
+  display:none;
+  margin-top:20px;
+  position:relative;
+  overflow:hidden;
+  padding: 24px 20px;
+  border:1px solid rgba(160,180,210,0.18);
+  background:rgba(0,0,0,0.25);
+}
+
+.particles{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+
+.dot{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:#5599ff;
+  border-radius:50%;
+  opacity:0;
+  animation: floatUp var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes floatUp{
+  0%{ transform:translateY(0) translateX(0); opacity:0; }
+  10%{ opacity:0.6; }
+  90%{ opacity:0.3; }
+  100%{ transform:translateY(-400px) translateX(var(--drift)); opacity:0; }
+}
+
+#final-content{ position:relative; z-index:2; }
+
+.final-tag{
+  font-size:11px;
+  color:#4a7abf;
+  letter-spacing:2px;
+  margin-bottom:16px;
+  opacity:0;
+  animation: fadeIn 0.4s ease 0.1s forwards;
+}
+
+.final-title{
+  font-size:20px;
+  font-weight:bold;
+  color:#d0e8ff;
+  letter-spacing:3px;
+  margin-bottom:4px;
+  opacity:0;
+  animation: fadeIn 0.4s ease 0.2s forwards, glitchAnim 4s ease 1.5s infinite;
+}
+
+@keyframes glitchAnim{
+  0%,90%,100%{ text-shadow:none; transform:none; }
+  92%{ text-shadow:-2px 0 rgba(255,80,100,0.6),2px 0 rgba(80,160,255,0.6); transform:translateX(2px); }
+  94%{ text-shadow:2px 0 rgba(255,80,100,0.6),-2px 0 rgba(80,160,255,0.6); transform:translateX(-2px); }
+  96%{ text-shadow:-1px 0 rgba(255,80,100,0.4); transform:translateX(1px); }
+  98%{ text-shadow:none; transform:none; }
+}
+
+.final-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,#2a4a7a,transparent);
+  margin:14px 0 20px;
+  opacity:0;
+  animation: fadeIn 0.6s ease 0.4s forwards;
+}
+
+@keyframes fadeIn{ to{ opacity:1; } }
+
+#final-lines{ min-height:160px; }
+
+.fline{
+  font-size:13px;
+  line-height:2;
+  color:#b0c8e8;
+  display:block;
+  min-height:1.6em;
+}
+
+.fline.hl{ color:#88bbff; font-weight:bold; }
+.fline.dim{ color:#4a6a8a; font-size:12px; }
+.fline.empty{ min-height:0.8em; }
+
+.cursor{
+  display:inline-block;
+  width:8px;
+  height:14px;
+  background:#88bbff;
+  vertical-align:middle;
+  margin-left:1px;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink{ 50%{ opacity:0; } }
+
+.heart-line{
+  text-align:center;
+  font-size:18px;
+  letter-spacing:6px;
+  color:#7799cc;
+  margin:18px 0 8px;
+  display:none;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
+
+.footer-tag{
+  font-size:11px;
+  color:#3a5a8a;
+  letter-spacing:2px;
+  margin-top:16px;
+  opacity:0;
+  transition: opacity 1s;
 }
 </style>
 </head>
 
 <body>
-
 <div class="scanline"></div>
 
 <div class="container">
+  <h1 class="glitch">MEMORY_ARCHIVE // CORE NODE</h1>
+  <p id="status">> SYSTEM INITIALIZING...</p>
 
-<h1 class="glitch">
-MEMORY_ARCHIVE // CORE NODE
-</h1>
+  <input id="cmd" placeholder="enter command">
+  <button onclick="run()">EXECUTE</button>
 
-<p id="status">
-> SYSTEM INITIALIZING...
-</p>
+  <div id="terminal"></div>
 
-<input id="cmd" placeholder="enter command">
-<button onclick="run()">EXECUTE</button>
-
-<div id="terminal"></div>
-
+  <div id="final-scene">
+    <div class="particles" id="particles"></div>
+    <div id="final-content">
+      <div class="final-tag">// CORE MEMORY RECOVERED</div>
+      <div class="final-title">CORE MEMORY UNLOCKED</div>
+      <div class="final-divider"></div>
+      <div id="final-lines"></div>
+      <div class="heart-line" id="hearts">♡ &nbsp; ♡ &nbsp; ♡</div>
+      <div class="footer-tag" id="footer">// SESSION TERMINATED &nbsp;&nbsp; MEMORY SAVED</div>
+    </div>
+  </div>
 </div>
 
 <script>
-
-const terminal=document.getElementById("terminal");
-const status=document.getElementById("status");
-  
-  const input=document.getElementById("cmd");
+const terminal = document.getElementById("terminal");
+const status = document.getElementById("status");
+const input = document.getElementById("cmd");
 
 input.addEventListener("keydown", function(e){
-if(e.key==="Enter"){
-run();
-}
+  if(e.key === "Enter") run();
 });
 
-let holesFound={
-sector_07:false,
-sector_13:false,
-sector_19:false
-};
-
+let holesFound = { sector_07:false, sector_13:false, sector_19:false };
 let queue = [];
 let isWriting = false;
+let finalStarted = false;
 
 function write(text){
-queue.push(text);
-if(!isWriting){
-processQueue();
-}
+  queue.push(text);
+  if(!isWriting) processQueue();
 }
 
 function processQueue(){
+  if(queue.length === 0){ isWriting = false; return; }
+  isWriting = true;
+  let text = queue.shift();
+  let lines = text.split("\n");
+  let lineIndex = 0;
 
-if(queue.length === 0){
-isWriting = false;
-return;
+  function printLine(){
+    if(lineIndex >= lines.length){ isWriting = false; processQueue(); return; }
+    let line = document.createElement("div");
+    terminal.appendChild(line);
+    let i = 0;
+    function typeChar(){
+      if(i < lines[lineIndex].length){
+        line.innerHTML += lines[lineIndex].charAt(i);
+        i++;
+        terminal.scrollTop = terminal.scrollHeight;
+        setTimeout(typeChar, 15);
+      } else {
+        lineIndex++;
+        setTimeout(printLine, 120);
+      }
+    }
+    typeChar();
+  }
+  printLine();
 }
 
-isWriting = true;
-
-let text = queue.shift();
-
-let lines = text.split("\n");
-let lineIndex = 0;
-
-function printLine(){
-
-if(lineIndex >= lines.length){
-isWriting = false;
-processQueue();
-return;
-}
-
-let line = document.createElement("div");
-terminal.appendChild(line);
-
-let i = 0;
-
-function typeChar(){
-
-if(i < lines[lineIndex].length){
-line.innerHTML += lines[lineIndex].charAt(i);
-i++;
-terminal.scrollTop = terminal.scrollHeight;
-setTimeout(typeChar, 15);
-}else{
-lineIndex++;
-setTimeout(printLine, 120);
-}
-
-}
-
-typeChar();
-
-}
-
-printLine();
-
-}
 function getProgress(){
+  let found = 0;
+  if(holesFound.sector_07) found++;
+  if(holesFound.sector_13) found++;
+  if(holesFound.sector_19) found++;
+  return Math.floor(found / 3 * 100);
+}
 
-let found=0;
+function beep(freq=700, dur=0.04, vol=0.04){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "square";
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    osc.start();
+    osc.stop(ctx.currentTime + dur);
+  } catch(e){}
+}
 
-if(holesFound.sector_07) found++;
-if(holesFound.sector_13) found++;
-if(holesFound.sector_19) found++;
+function chime(){
+  [520, 660, 780].forEach((f, i) => {
+    setTimeout(() => beep(f, 0.12, 0.06), i * 120);
+  });
+}
 
-return Math.floor(found/3*100);
+const finalLines = [
+  { text:"Система: классификация завершена.", cls:"dim" },
+  { text:"", cls:"empty" },
+  { text:"Статус: объект не является стандартным пользователем.", cls:"" },
+  { text:"Уровень значимости: ВЫСОКИЙ.", cls:"hl" },
+  { text:"", cls:"empty" },
+  { text:"Если ты это читаешь —", cls:"" },
+  { text:"значит ты добрался до ядра системы.", cls:"" },
+  { text:"", cls:"empty" },
+  { text:"Мне хотелось сделать для тебя не просто подарок.", cls:"" },
+  { text:"А показать, что я тебя очень люблю ❤", cls:"hl" },
+  { text:"и искренне желаю успехов — в деле,", cls:"" },
+  { text:"в реализации себя, во всём.", cls:"" },
+  { text:"", cls:"empty" },
+  { text:"Я верю, что у тебя всё получится.", cls:"" },
+  { text:"И буду рядом на каждом этапе.", cls:"hl" },
+  { text:"", cls:"empty" },
+  { text:"С днём рождения. ❤️", cls:"hl" },
+];
 
+function makeParticles(){
+  const c = document.getElementById("particles");
+  c.innerHTML = "";
+  for(let i = 0; i < 22; i++){
+    const d = document.createElement("div");
+    d.className = "dot";
+    d.style.setProperty("--dur", (4 + Math.random()*5) + "s");
+    d.style.setProperty("--delay", (Math.random()*6) + "s");
+    d.style.setProperty("--drift", (Math.random()*60 - 30) + "px");
+    d.style.left = (Math.random()*100) + "%";
+    d.style.bottom = "0px";
+    c.appendChild(d);
+  }
+}
+
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+async function typeFinalLine(el, text, cls){
+  el.className = "fline " + (cls||"");
+  if(!text) return;
+  const cursor = document.createElement("span");
+  cursor.className = "cursor";
+  el.appendChild(cursor);
+  for(let i = 0; i < text.length; i++){
+    cursor.before(document.createTextNode(text[i]));
+    if(text[i] !== " ") beep(680 + Math.random()*80, 0.025, 0.025);
+    await sleep(22 + Math.random()*18);
+  }
+  cursor.remove();
+}
+
+async function showFinalScene(){
+  if(finalStarted) return;
+  finalStarted = true;
+
+  document.getElementById("final-scene").style.display = "block";
+  makeParticles();
+
+  await sleep(600);
+
+  for(let i = 0; i < finalLines.length; i++){
+    const { text, cls } = finalLines[i];
+    const el = document.createElement("span");
+    document.getElementById("final-lines").appendChild(el);
+    if(!text){ el.className = "fline empty"; await sleep(180); continue; }
+    if(cls === "hl" && text.includes("❤")) chime();
+    await typeFinalLine(el, text, cls);
+    await sleep(cls === "hl" ? 280 : 160);
+  }
+
+  await sleep(400);
+  const hearts = document.getElementById("hearts");
+  hearts.style.display = "block";
+  chime();
+
+  await sleep(600);
+  document.getElementById("footer").style.opacity = "1";
 }
 
 function run(){
+  const v = input.value.trim().toLowerCase();
+  input.value = "";
+  write("INPUT: " + v);
 
-const input=document.getElementById("cmd");
-const v=input.value.trim().toLowerCase();
-
-input.value="";
-
-write("INPUT: "+v);
-
-if(v==="help"){
-
-write("AVAILABLE COMMANDS:");
-write("logs");
-write("scan");
-write("status");
-write("sector_##");
-write("???");
-
+  if(v === "help"){
+    write("AVAILABLE COMMANDS:");
+    write("logs\nscan\nstatus\nsector_##\ncore");
+  }
+  else if(v === "logs"){
+    write("Loading memory logs...\n19 sectors detected");
+  }
+  else if(v === "scan"){
+    write("Scanning memory...\nAnomalies detected: 3\nsectors: 07 / 13 / 19");
+  }
+  else if(v === "status"){
+    let p = getProgress();
+    write("System status: ONLINE\nMemory integrity: " + (73 + p/3).toFixed(0) + "%\nFragments recovered: " + p + "%");
+  }
+  else if(v.startsWith("sector_")){
+    if(v === "sector_07"){ holesFound.sector_07 = true; write("УЗЕЛ 07 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
+    else if(v === "sector_13"){ holesFound.sector_13 = true; write("УЗЕЛ 13 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
+    else if(v === "sector_19"){ holesFound.sector_19 = true; write("УЗЕЛ 19 АКТИВЕН\nфрагмент памяти восстановлен\nстатус: нестабильный"); }
+    else{ write("Scanning sector...\nStatus: OK\nNo anomalies detected"); }
+  }
+  else if(v === "core"){
+    let p = getProgress();
+    write("CORE MEMORY CHECK...\nfragments found: " + p + "%");
+    if(p < 100){ write("CORE LOCKED\nmissing fragments: " + (3 - [holesFound.sector_07,holesFound.sector_13,holesFound.sector_19].filter(Boolean).length)); return; }
+    write("CORE MEMORY UNLOCKED\nINITIALIZING FINAL REPORT...");
+    setTimeout(showFinalScene, 2000);
+  }
+  else{
+    write("UNKNOWN COMMAND");
+  }
 }
 
-else if(v==="logs"){
-
-write("Loading memory logs...");
-write("19 sectors detected");
-
-}
-
-else if(v==="scan"){
-
-write("Scanning memory...");
-write("Anomalies detected: 3");
-
-}
-
-else if(v==="status"){
-
-write("System status: ONLINE");
-write("Memory integrity: 73%");
-
-}
-
-else if(v.startsWith("sector_")){
-
-if(v==="sector_07"){
-
-holesFound.sector_07=true;
-
-write("УЗЕЛ АКТИВЕН");
-write("обнаружена аномалия");
-write("фрагмент памяти восстановлен");
-write("статус: нестабильный");
-
-}
-
-else if(v==="sector_13"){
-
-holesFound.sector_13=true;
-
-write("УЗЕЛ АКТИВЕН");
-write("обнаружена аномалия");
-write("фрагмент памяти восстановлен");
-write("статус: нестабильный");
-
-}
-
-else if(v==="sector_19"){
-
-holesFound.sector_19=true;
-
-write("УЗЕЛ АКТИВЕН");
-write("обнаружена аномалия");
-write("фрагмент памяти восстановлен");
-write("статус: нестабильный");
-
-}
-
-else{
-
-write("Scanning sector...");
-write("Status: OK");
-write("Integrity: 100%");
-write("No anomalies detected");
-
-}
-
-}
-
-
-else if(v==="core"){
-
-let p=getProgress();
-
-write("CORE MEMORY CHECK...");
-write("fragments found: "+p+"%");
-
-if(p<100){
-write("CORE LOCKED");
-write("missing fragments detected");
-return;
-}
-
-write("");
-write("CORE MEMORY UNLOCKED");
-write("INITIALIZING FINAL REPORT...");
-write("");
-write("Система: классификация завершена");
-write("Статус: объект не является стандартным пользователем");
-write("Уровень значимости: высокий");
-write("");
-write("С днём рождения ❤️");
-write("Система зафиксировала тебя в памяти.");
-write("");
-write("SYSTEM LOG CLOSED");
-write("SESSION TERMINATED");
-
-}
-
-else{
-write("UNKNOWN COMMAND");
-}
-
-}
-
-setTimeout(()=>{
-
-status.innerText="> CORE NODE ONLINE";
-
-},1200);
-
+setTimeout(() => { status.innerText = "> CORE NODE ONLINE"; }, 1200);
 </script>
-
 </body>
 </html>
